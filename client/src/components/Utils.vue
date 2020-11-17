@@ -8,10 +8,10 @@
 </template>
 
 <script>
-  export default {
+export default {
     data: () => ({
         item: 1,
         items: [],
     }),
-  }
+}
 </script>

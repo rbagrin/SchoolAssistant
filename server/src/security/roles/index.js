@@ -2,6 +2,10 @@ const {
     ServerError
 } = require('../../errors');
 
+/**
+ * Authorize access to resources
+ * @param  {...any} roles 
+ */
 const authorizeRoles = (...roles) => {
 
     return (req, res, next) => {
@@ -9,11 +13,11 @@ const authorizeRoles = (...roles) => {
         for (let i = 0; i < roles.length; i++) {
 
             if (req.state.decoded.role === roles[i]) {
-                
-                    return next();
+
+                return next();
             }
         }
-        throw new ServerError('Nu sunteti autorizat sa accesati resursa!', 401);
+        throw new ServerError('Not authorized to access this resource!', 401);
     }
 };
 

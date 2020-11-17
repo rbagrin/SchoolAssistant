@@ -16,8 +16,8 @@ const options = {
 };
 
 /**
- * Functie ce genereaza tokenul de autorizare
- * @param { {String, String} } payload de forma {userId, userRole}
+ * Generates authorization token
+ * @param { {String, String} } payload {userId, userRole}
  * @returns { String } token
  */
 const generateToken = (payload) => {
@@ -28,12 +28,12 @@ const generateToken = (payload) => {
     } catch (err) {
 
         console.trace(err);
-        throw new ServerError("Eroare la codificarea tokenului!", 500);
+        throw new ServerError("Error on encrypting token!", 500);
     }
 };
 
 /**
- * Verifica tokenul si decodeaza datele din token.
+ * Verify token and decrypt data from token
  * @param {String} token
  * @returns {*}
  */
@@ -45,12 +45,12 @@ const verifyAndDecodeData = (token) => {
     } catch (err) {
 
         console.trace(err);
-        throw new ServerError("Eroare la decodificarea tokenului!", 500);
+        throw new ServerError("Error on decrypting token!", 500);
     }
 };
 
 /**
- * Autorizeaza requestul si extrage tokenul
+ * Authorizes request and extracts the token
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
@@ -60,9 +60,11 @@ const authorizeAndExtractToken = (req, res, next) => {
 
         if (!req.headers.authorization) {
 
-            throw new ServerError('Lipseste headerul de autorizare!', 403);
+            throw new ServerError('Authorization header is missing', 403);
         }
-        const token = req.headers.authorization.split(" ")[1]; // se separa dupa " " deoarece este de forma: Bearer 1wqeiquqwe0871238712qwe
+        
+        // Splits after " " as received field is: Bearer 1wqeiquqwe0871238712qwe
+        const token = req.headers.authorization.split(" ")[1];
 
         validateFields({
             jwt: {

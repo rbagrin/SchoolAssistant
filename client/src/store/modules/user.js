@@ -36,35 +36,68 @@ export default {
     },
 
     mutations: {
+        /**
+         * Logout
+         * @param {*} state
+         */
         logout: (state) => {
             state.token = null;
             state.user = null;
         },
 
+        /**
+         * Sets token to localStorage
+         * @param {*} state 
+         * @param {String} token 
+         */
         setToken(state, token) {
             state.token = token;
             localStorage.setItem('access-token', token);
         },
 
+        /**
+         * Sets name to localStorage
+         * @param {*} state 
+         * @param {String} name 
+         */
         setUserName(state, name) {
             state.user_role = name;
             localStorage.setItem("user_name", name);
         },
 
+        /**
+         * Sets user's email to localStorage
+         * @param {*} state 
+         * @param {String} email 
+         */
         setUserEmail(state, email) {
             state.user_email = email;
             localStorage.setItem("user_email", email);
         },
 
+        /**
+         * Sets role to localStorage
+         * @param {*} state 
+         * @param {*} role 
+         */
         setUserRole(state, role) {
             state.user_role = role;
             localStorage.setItem("user_role", role);
         },
 
+        /**
+         * Sets user to localStorage
+         * @param {*} state 
+         * @param {*} user 
+         */
         setUser(state, user) {
             state.user = user;
             localStorage.setItem("user", user);
         },
+        /**
+         * @param {*} state
+         * @param {*} users
+         */
         updateUsers: (state, users) => (state.users = users),
     },
 
@@ -141,32 +174,32 @@ export default {
                 body: JSON.stringify(payload)
             })
         },
-    
+
         getUsersFromDB({
             commit
         }) {
 
             return fetch(USERS_URL, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('access-token')
-                },
-                mode: "cors"
-            })
-            .then(res => res.json())
-            .then(res => {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+                    },
+                    mode: "cors"
+                })
+                .then(res => res.json())
+                .then(res => {
 
-                if (res.success) {
+                    if (res.success) {
 
-                    commit("updateUsers", res.users);
-                    return res.users;
-                }
-                return [];
-            })
-            .catch(err => {
-                console.log(err);
-                return [];
-            });
+                        commit("updateUsers", res.users);
+                        return res.users;
+                    }
+                    return [];
+                })
+                .catch(err => {
+                    console.log(err);
+                    return [];
+                });
         },
 
         addUser({
@@ -174,26 +207,26 @@ export default {
         }, user) {
 
             return fetch(USERS_URL, {
-                method: "POST",
-                mode: "cors",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": 'Bearer ' + localStorage.getItem('access-token')
-                },
-                body: JSON.stringify(user)
-            })
-            .then(res => res.json())
-            .then(res => {
+                    method: "POST",
+                    mode: "cors",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem('access-token')
+                    },
+                    body: JSON.stringify(user)
+                })
+                .then(res => res.json())
+                .then(res => {
 
-                dispatch("getUsersFromDB");
-                return res.success;
-            })
-            .catch(err => {
+                    dispatch("getUsersFromDB");
+                    return res.success;
+                })
+                .catch(err => {
 
-                console.log(err);
-                return false;
-            })
+                    console.log(err);
+                    return false;
+                })
         },
 
         updateUser({
@@ -201,24 +234,24 @@ export default {
         }, payload) {
 
             return fetch("http://localhost:5000/users/" + payload.userId, {
-                method: "PUT",
-                mode: "cors",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": 'Bearer ' + localStorage.getItem('access-token')
-                },
-                body: JSON.stringify(payload.data)
-            })
-            .then(res => res.json())
-            .then((res) => {
-                dispatch("getUsersFromDB");
-                return res.success;
-            })
-            .catch(err => {
-                console.log(err);
-                return false;
-            });
+                    method: "PUT",
+                    mode: "cors",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem('access-token')
+                    },
+                    body: JSON.stringify(payload.data)
+                })
+                .then(res => res.json())
+                .then((res) => {
+                    dispatch("getUsersFromDB");
+                    return res.success;
+                })
+                .catch(err => {
+                    console.log(err);
+                    return false;
+                });
         },
 
         deleteUser({
@@ -226,23 +259,23 @@ export default {
         }, userId) {
 
             return fetch(USERS_URL + userId, {
-                method: "DELETE",
-                mode: "cors",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": 'Bearer ' + localStorage.getItem('access-token')
-                }
-            })
-            .then((res) => {
+                    method: "DELETE",
+                    mode: "cors",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem('access-token')
+                    }
+                })
+                .then((res) => {
 
-                dispatch("getUsersFromDB");
-                return res.status === 204;
-            })
-            .catch(err => {
-                console.log(err);
-                return false;
-            });
+                    dispatch("getUsersFromDB");
+                    return res.status === 204;
+                })
+                .catch(err => {
+                    console.log(err);
+                    return false;
+                });
         }
     }
 };

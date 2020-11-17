@@ -1,6 +1,15 @@
 const nodemailer = require('nodemailer');
 const Tasks = require('../data').Tasks;
 
+/**
+ * Add task
+ * @param {String} title 
+ * @param {String} taskDescription 
+ * @param {String} assignedBy 
+ * @param {Date} deadline 
+ * @param {String} course 
+ * @param {String} send_response_to 
+ */
 const add = async (title, taskDescription, assignedBy, deadline, course, send_response_to) => {
     const task = new Tasks({
         title,
@@ -13,14 +22,29 @@ const add = async (title, taskDescription, assignedBy, deadline, course, send_re
     await task.save();
 };
 
+/**
+ * Get all tasks
+ */
 const getAll = async () => {
     return await Tasks.find();
 };
 
+/**
+ * Get task by id
+ * @param {String} id 
+ */
 const getById = async (id) => {
     return await Tasks.findById(id);
 };
 
+/**
+ * Update task by id
+ * @param {String} id 
+ * @param {String} title 
+ * @param {String} taskDescription 
+ * @param {Date} deadline 
+ * @param {String} course 
+ */
 const updateById = async (id, title, taskDescription, deadline, course) => {
     await Tasks.findByIdAndUpdate(id, {
         $set: {
@@ -32,10 +56,18 @@ const updateById = async (id, title, taskDescription, deadline, course) => {
     });
 };
 
+/**
+ * Delete task by id
+ * @param {String} id 
+ */
 const deleteById = async (id) => {
     await Tasks.findByIdAndDelete(id);
 };
 
+/**
+ * Send answer email
+ * @param {*} task 
+ */
 const sendAnswer = (task) => {
 
     const user_email = "kayli.mitchell67@ethereal.email";

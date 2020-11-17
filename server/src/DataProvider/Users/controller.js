@@ -1,12 +1,26 @@
 const express = require('express');
 
 const UsersService = require('./services.js');
-const { validateFields } = require('../../utils');
-const { authorizeAndExtractToken } = require('../../security/jwt');
-const { authorizeRoles } = require('../../security/roles');
+
+const {
+    validateFields
+} = require('../../utils');
+
+const {
+    authorizeAndExtractToken
+} = require('../../security/jwt');
+
+const {
+    authorizeRoles
+} = require('../../security/roles');
 
 const UsersConstants = require('../../lib/Constants').Users;
-const {adminRole, supportRole, userRole} = UsersConstants.roles;
+
+const {
+    adminRole,
+    supportRole,
+    userRole
+} = UsersConstants.roles;
 
 const ROLES_MAPPING = {
     [adminRole]: "admin",
@@ -16,6 +30,9 @@ const ROLES_MAPPING = {
 
 const router = express.Router();
 
+/**
+ * GET /users
+ */
 router.get('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     try {
@@ -23,7 +40,7 @@ router.get('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req,
         const allUsers = await UsersService.getAll();
 
         const users = [];
-        
+
         allUsers.forEach((user) => {
             users.push({
                 _id: user._id,
@@ -33,12 +50,18 @@ router.get('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req,
             });
         });
 
-        res.json({success: true, users: users});
+        res.json({
+            success: true,
+            users: users
+        });
     } catch (err) {
         next(err);
     }
 });
 
+/**
+ * GET /users/:id
+ */
 router.get('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole), async (req, res, next) => {
 
     try {
@@ -51,6 +74,9 @@ router.get('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRo
     }
 });
 
+/**
+ * POST /users
+ */
 router.post('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const name = req.body.name;
@@ -96,6 +122,9 @@ router.post('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req
     }
 });
 
+/**
+ * PUT /users/:id
+ */
 router.put('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const id = req.params.id;
@@ -138,6 +167,9 @@ router.put('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (r
     }
 });
 
+/**
+ * DELETE /users/:id
+ */
 router.delete('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const id = req.params.id;
@@ -163,14 +195,16 @@ router.delete('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async
     }
 });
 
-// Register & Login
+/**
+ * POST /users/login
+ */
 router.post('/login', async (req, res, next) => {
 
     const username = req.body.username;
     const password = req.body.password;
 
     try {
-    
+
         const fieldsToBeValidated = {
             username: {
                 value: username,
@@ -196,12 +230,15 @@ router.post('/login', async (req, res, next) => {
             }
         });
 
-    } catch(err) {
-        
+    } catch (err) {
+
         next(err);
     }
 });
 
+/**
+ * POST /users/register
+ */
 router.post('/register', async (req, res, next) => {
 
     const name = req.body.name;
@@ -233,10 +270,10 @@ router.post('/register', async (req, res, next) => {
             success: true,
             message: "Successfully registered"
         });
-    } catch(err) {
+    } catch (err) {
 
         next(err);
-    }   
+    }
 });
 
 module.exports = router;

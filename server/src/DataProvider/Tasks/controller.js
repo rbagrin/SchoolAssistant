@@ -1,27 +1,49 @@
 const express = require('express');
 
 const TasksService = require('./services.js');
-const { validateFields } = require('../../utils');
-const { authorizeAndExtractToken } = require('../../security/jwt');
-const { authorizeRoles } = require('../../security/roles');
+
+const {
+    validateFields
+} = require('../../utils');
+
+const {
+    authorizeAndExtractToken
+} = require('../../security/jwt');
+
+const {
+    authorizeRoles
+} = require('../../security/roles');
 
 const UsersConstants = require('../../lib/Constants').Users;
-const {adminRole, supportRole, userRole} = UsersConstants.roles;
+
+const {
+    adminRole,
+    supportRole,
+    userRole
+} = UsersConstants.roles;
 
 const router = express.Router();
 
+/**
+ * GET /tasks
+ */
 router.get('/', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole, userRole), async (req, res, next) => {
 
     try {
 
         const tasks = await TasksService.getAll();
-        res.json({success: true, tasks: tasks});
+        res.json({
+            success: true,
+            tasks: tasks
+        });
     } catch (err) {
         next(err);
     }
 });
 
-
+/**
+ * GET /tasks/:id
+ */
 router.get('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole, userRole), async (req, res, next) => {
 
     try {
@@ -34,6 +56,9 @@ router.get('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRo
     }
 });
 
+/**
+ * POST /tasks
+ */
 router.post('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const title = req.body.title;
@@ -86,6 +111,9 @@ router.post('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req
     }
 });
 
+/**
+ * PUT /tasks/:id
+ */
 router.put('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const id = req.params.id;
@@ -129,6 +157,9 @@ router.put('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (r
     }
 });
 
+/**
+ * DELETE /tasks/:id
+ */
 router.delete('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const id = req.params.id;
@@ -150,6 +181,9 @@ router.delete('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async
     }
 });
 
+/**
+ * POST /tasks/answer
+ */
 router.post('/answer', authorizeAndExtractToken, authorizeRoles(userRole, adminRole, supportRole), async (req, res, next) => {
 
     const title = req.body.title;

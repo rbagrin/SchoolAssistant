@@ -1,68 +1,42 @@
 <template>
-  <v-container class="faq my-5">
-    <h1 style="color: #fff">Frequently Asked Questions - Support</h1>
+    <v-container class="faq my-5">
+        <h1 style="color: #fff">Frequently Asked Questions - Support</h1>
 
-    <v-container fluid>
-        <v-row v-if="true" class="justify-start mx-0">
-          <v-select
-                    v-model="questionSelect"
-                    :items="questions"
-                    label="Display questions"
-                    required
-                ></v-select>
-        </v-row>
-        <v-spacer></v-spacer>
-      <v-row class="justify-end">
-        <FAQform />
-      </v-row>
+        <v-container fluid>
+            <v-row v-if="true" class="justify-start mx-0">
+                <v-select v-model="questionSelect" :items="questions" label="Display questions" required></v-select>
+            </v-row>
+            <v-spacer></v-spacer>
+            <v-row class="justify-end">
+                <FAQform />
+            </v-row>
+        </v-container>
+
+        <v-expansion-panels focusable v-model="currentQuestion" dark>
+            <v-expansion-panel v-for="faq in questionSelectArray" :key="faq.id">
+                <v-expansion-panel-header>{{ faq.question }}</v-expansion-panel-header>
+                <v-expansion-panel-content height="200px">
+                    <v-textarea class="mx-2" v-model="answer" label="Answer the question" rows="1"
+                        prepend-icon="comment" auto-grow></v-textarea>
+                    <v-row class="mx-0" justify="space-between">
+                        <v-col cols=12 md="3" align="end" justify="end">
+                            <v-checkbox v-model="important" label="Mark as important" color="#4DB6AC" hide-details>
+                            </v-checkbox>
+                        </v-col>
+                        <v-col cols=12 md="2" align="end">
+                            <v-btn small color="info" style="margin-right: 20px" @click="reply(faq)"
+                                :loading="loadingReplyButton">
+                                <v-icon>fa-reply</v-icon>
+                            </v-btn>
+                            <v-btn small icon color="error" @click="deleteQuestion(faq)" :loading="loadingDeleteButton">
+                                <v-icon>fa-trash</v-icon>
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-expansion-panels>
     </v-container>
-
-    <v-expansion-panels focusable v-model="currentQuestion" dark>
-      <v-expansion-panel v-for="faq in questionSelectArray" :key="faq.id">
-        <v-expansion-panel-header>{{ faq.question }}</v-expansion-panel-header>
-        <v-expansion-panel-content height="200px">
-          <v-textarea
-            class="mx-2"
-            v-model="answer"
-            label="Answer the question"
-            rows="1"
-            prepend-icon="comment"
-            auto-grow
-          ></v-textarea>
-          <v-row class="mx-0" justify="space-between">
-                <v-col cols=12 md="3" align="end" justify="end">
-                    <v-checkbox
-                        v-model="important"
-                        label="Mark as important"
-                        color="#4DB6AC"
-                        hide-details
-                    ></v-checkbox>
-            </v-col>
-            <v-col cols=12 md="2" align="end">
-                <v-btn
-                small
-                color="info"
-                style="margin-right: 20px"
-                @click="reply(faq)"
-                :loading="loadingReplyButton"
-                >
-                <v-icon>fa-reply</v-icon>
-                </v-btn>
-                <v-btn
-                small
-                icon
-                color="error"
-                @click="deleteQuestion(faq)"
-                :loading="loadingDeleteButton"
-                >
-                <v-icon>fa-trash</v-icon>
-                </v-btn>
-            </v-col>
-          </v-row>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
-  </v-container>
 </template>
 
 <script>
@@ -96,6 +70,10 @@ export default {
     },
 
     methods: {
+        /**
+         * Reply to FAQ
+         * @param {*} faq
+         */
         async reply(faq) {
             this.loadingReplyButton = true;
 
@@ -127,8 +105,12 @@ export default {
             this.loadingReplyButton = false;
         },
 
+        /**
+         * Deletes questions
+         * @param {*} faq
+         */
         async deleteQuestion(faq) {
-            
+
             this.loadingDeleteButton = true;
 
             try {
@@ -147,19 +129,35 @@ export default {
     },
 
     computed: {
+        /**
+         * Get all FAQs from store
+         * @returns {*} FAQS
+         */
         allFaqs: function () {
             return this.$store.getters.faqs;
         },
+        /**
+         * Get unaswered FAQs from store
+         * @returns {*} FAQS
+         */
         unansweredFaqs: function () {
             return this.$store.getters.faqs.filter(
                 faq => !faq.answer && !faq.answeredBy
             );
         },
+        /**
+         * Get important marked FAQs from store
+         * @returns {*} FAQS
+         */
         importantFaqs: function () {
             return this.$store.getters.faqs.filter(
                 faq => faq.important
             );
         },
+        /**
+         * Get FAQs type
+         * @returns {*}
+         */
         questionSelectArray() {
 
             if (this.questionSelect === "Unanswered questions") {
@@ -169,12 +167,20 @@ export default {
             if (this.questionSelect === "Important questions") {
                 return this.importantFaqs;
             }
-                
+
             return this.allFaqs;
         },
+        /**
+         * Get user's name from store
+         * @returns {String}
+         */
         getUserName() {
             return this.$store.getters.user_name;
         },
+        /**
+         * Get user's email from store
+         * @returns {String}
+         */
         getUserEmail() {
             return this.$store.getters.user_email;
         }
@@ -184,9 +190,9 @@ export default {
 
 <style scoped>
 @media only screen and (max-width: 960px) {
-  .faq {
-    margin: 0;
-    padding: 0;
-  }
+    .faq {
+        margin: 0;
+        padding: 0;
+    }
 }
 </style>

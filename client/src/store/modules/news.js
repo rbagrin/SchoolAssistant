@@ -18,107 +18,126 @@ export default {
     },
 
     actions: {
+        /**
+         * Get NEWS from DB
+         * @param {*} param0 
+         */
         getNewsFromDB({
             commit
         }) {
 
             return fetch(NEWS_URL, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('access-token')
-                },
-                mode: "cors"
-            })
-            .then(res => res.json())
-            .then(res => {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+                    },
+                    mode: "cors"
+                })
+                .then(res => res.json())
+                .then(res => {
 
-                if (res.success) {
+                    if (res.success) {
 
-                    commit("updateNews", res.news);
-                    return res.news;
-                }
-                return [];
-            })
-            .catch(err => {
-                console.log(err);
-                return [];
-            });
+                        commit("updateNews", res.news);
+                        return res.news;
+                    }
+                    return [];
+                })
+                .catch(err => {
+                    console.log(err);
+                    return [];
+                });
         },
 
+        /**
+         * Add NEWS to DB
+         * @param {*} param0 
+         * @param {*} news 
+         */
         addNews({
             dispatch
         }, news) {
 
             return fetch("http://localhost:5000/news", {
-                method: "POST",
-                mode: "cors",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": 'Bearer ' + localStorage.getItem('access-token')
-                },
-                body: JSON.stringify(news)
-            })
-            .then(res => res.json())
-            .then(res => {
+                    method: "POST",
+                    mode: "cors",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem('access-token')
+                    },
+                    body: JSON.stringify(news)
+                })
+                .then(res => res.json())
+                .then(res => {
 
-                dispatch("getNewsFromDB");
-                return res.success;
-            })
-            .catch(err => {
+                    dispatch("getNewsFromDB");
+                    return res.success;
+                })
+                .catch(err => {
 
-                console.log(err);
-                return false;
-            })
+                    console.log(err);
+                    return false;
+                })
         },
 
+        /**
+         * Updates NEWS to DB
+         * @param {*} param0 
+         * @param {*} payload 
+         */
         updateNews({
             dispatch
         }, payload) {
 
             return fetch("http://localhost:5000/news/" + payload.newsId, {
-                method: "PUT",
-                mode: "cors",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": 'Bearer ' + localStorage.getItem('access-token')
-                },
-                body: JSON.stringify(payload.data)
-            })
-            .then(res => res.json())
-            .then((res) => {
-                dispatch("getNewsFromDB");
-                return res.success;
-            })
-            .catch(err => {
-                console.log(err);
-                return false;
-            });
+                    method: "PUT",
+                    mode: "cors",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem('access-token')
+                    },
+                    body: JSON.stringify(payload.data)
+                })
+                .then(res => res.json())
+                .then((res) => {
+                    dispatch("getNewsFromDB");
+                    return res.success;
+                })
+                .catch(err => {
+                    console.log(err);
+                    return false;
+                });
         },
 
+        /**
+         * Deletes NEWS by id from DB
+         * @param {*} param0 
+         * @param {String} newsId 
+         */
         deleteNews({
             dispatch
         }, newsId) {
 
             return fetch("http://localhost:5000/news/" + newsId, {
-                method: "DELETE",
-                mode: "cors",
-                cache: "no-cache",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": 'Bearer ' + localStorage.getItem('access-token')
-                }
-            })
-            .then((res) => {
+                    method: "DELETE",
+                    mode: "cors",
+                    cache: "no-cache",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + localStorage.getItem('access-token')
+                    }
+                })
+                .then((res) => {
 
-                dispatch("getNewsFromDB");
-                return res.status === 204;
-            })
-            .catch(err => {
-                console.log(err);
-                return false;
-            });
+                    dispatch("getNewsFromDB");
+                    return res.status === 204;
+                })
+                .catch(err => {
+                    console.log(err);
+                    return false;
+                });
         }
     }
 };

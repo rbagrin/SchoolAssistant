@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+    <div class="home">
         <v-row height="100%" justify="space-between">
             <v-col cols="12" md="3">
                 <Tasks :tasks="allTasks" />
@@ -11,7 +11,7 @@
                 <Utils />
             </v-col>
         </v-row>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -20,9 +20,13 @@ import Utils from "@/components/Utils";
 import Tasks from "@/components/Tasks";
 
 export default {
-  name: "Home",
-  components: {News, Utils, Tasks},
-  created() {
+    name: "Home",
+    components: {
+        News,
+        Utils,
+        Tasks
+    },
+    created() {
         this.$store.dispatch('getTasksFromDB');
         this.$store.dispatch('getNewsFromDB');
     },

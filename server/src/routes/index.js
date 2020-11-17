@@ -12,7 +12,10 @@ Router.use('/news', NewsController);
 Router.use('/tasks', TasksController);
 
 
-// Welcome Page
+/* Welcome Page */
+/**
+ * GET route for home '/'
+ */
 Router.get('/', (req, res) => {
 
     jwt.verify(req.token, secretKey, (err, authData) => {
@@ -29,6 +32,9 @@ Router.get('/', (req, res) => {
     });
 });
 
+/**
+ * POST route for home '/'
+ */
 Router.post('/', (req, res) => {
 
     jwt.verify(req.token, secretKey, (err, authData) => {

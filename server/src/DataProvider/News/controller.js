@@ -1,27 +1,49 @@
 const express = require('express');
 
 const NewsService = require('./services.js');
-const { validateFields } = require('../../utils');
-const { authorizeAndExtractToken } = require('../../security/jwt');
-const { authorizeRoles } = require('../../security/roles');
+
+const {
+    validateFields
+} = require('../../utils');
+
+const {
+    authorizeAndExtractToken
+} = require('../../security/jwt');
+
+const {
+    authorizeRoles
+} = require('../../security/roles');
 
 const UsersConstants = require('../../lib/Constants').Users;
-const {adminRole, supportRole, userRole} = UsersConstants.roles;
+
+const {
+    adminRole,
+    supportRole,
+    userRole
+} = UsersConstants.roles;
 
 const router = express.Router();
 
+/**
+ * GET /news
+ */
 router.get('/', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole, userRole), async (req, res, next) => {
 
     try {
 
         const news = await NewsService.getAll();
-        res.json({success: true, news: news});
+        res.json({
+            success: true,
+            news: news
+        });
     } catch (err) {
         next(err);
     }
 });
 
-
+/**
+ * GET /news/:id
+ */
 router.get('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole, userRole), async (req, res, next) => {
 
     try {
@@ -34,6 +56,9 @@ router.get('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRo
     }
 });
 
+/**
+ * POST /news
+ */
 router.post('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const title = req.body.title;
@@ -81,6 +106,9 @@ router.post('/', authorizeAndExtractToken, authorizeRoles(adminRole), async (req
     }
 });
 
+/**
+ * PUT /news/:id
+ */
 router.put('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const id = req.params.id;
@@ -113,12 +141,15 @@ router.put('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (r
             success: true,
             message: 'News successfully updated!'
         });
-    } catch(err) {
+    } catch (err) {
         next(err);
     }
 
 });
 
+/**
+ * DELETE /news/:id
+ */
 router.delete('/:id', authorizeAndExtractToken, authorizeRoles(adminRole), async (req, res, next) => {
 
     const id = req.params.id;

@@ -1,18 +1,23 @@
 const express = require('express');
 
 const FaqsService = require('./services.js');
+
 const UsersService = require('../Users/services.js');
+
 const {
     validateFields
 } = require('../../utils');
+
 const {
     authorizeAndExtractToken
 } = require('../../security/jwt');
+
 const {
     authorizeRoles
 } = require('../../security/roles');
 
 const UsersConstants = require('../../lib/Constants').Users;
+
 const {
     adminRole,
     supportRole,
@@ -21,6 +26,9 @@ const {
 
 const router = express.Router();
 
+/**
+ * GET /faqs
+ */
 router.get('/', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole, userRole), async (req, res, next) => {
 
     try {
@@ -31,12 +39,14 @@ router.get('/', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole,
             faqs: faqs
         });
     } catch (err) {
-        // daca primesc eroare, pasez eroarea mai departe la handler-ul de errori declarat ca middleware
+        // If error is cathced go the error handler middleware
         next(err);
     }
 });
 
-
+/**
+ * GET /faqs/:id
+ */
 router.get('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole, userRole), async (req, res, next) => {
 
     try {
@@ -49,6 +59,9 @@ router.get('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRo
     }
 });
 
+/**
+ * POST /faqs
+ */
 router.post('/', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole, userRole), async (req, res, next) => {
 
     const question = req.body.question;
@@ -94,6 +107,9 @@ router.post('/', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole
     }
 });
 
+/**
+ * PUT /faqs/:id
+ */
 router.put('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole), async (req, res, next) => {
 
     const id = req.params.id;
@@ -144,6 +160,9 @@ router.put('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRo
     }
 });
 
+/**
+ * DELETE /faqs/:id
+ */
 router.delete('/:id', authorizeAndExtractToken, authorizeRoles(adminRole, supportRole), async (req, res, next) => {
 
     const id = req.params.id;

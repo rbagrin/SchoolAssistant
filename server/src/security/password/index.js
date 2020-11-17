@@ -1,6 +1,9 @@
 const bcryptjs = require('bcrypt');
 
-// va trebui sa folositi hash atunci cand stocati parola in baza de date, la register
+/**
+ * Hashes password
+ * @param {*} plainTextPassword 
+ */
 const hash = async (plainTextPassword) => {
 
     const salt = await bcryptjs.genSalt(5);
@@ -8,9 +11,13 @@ const hash = async (plainTextPassword) => {
     return hash;
 };
 
-// va trebui sa folositi compare atunci cand primiti cerere de autentificare
+/**
+ * Compare plainTextPassword's hash with the hashed existing password
+ * @param {*} plainTextPassword 
+ * @param {*} hashedPassword 
+ */
 const compare = async (plainTextPassword, hashedPassword) => {
-    
+
     const isOk = await bcryptjs.compare(plainTextPassword, hashedPassword);
     return isOk;
 };

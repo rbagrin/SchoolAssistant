@@ -57,9 +57,15 @@ export default {
         }
     },
     computed: {
+        /**
+         * Enables/disables submit button
+         */
         disabledSubmit() {
             return !this.answer;
         },
+        /**
+         * @returns {*} name and email object
+         */
         getCurrentUserObject() {
 
             return {
@@ -69,6 +75,9 @@ export default {
         }
     },
     methods: {
+        /**
+         * Handles submit answer
+         */
         async submitAnswer() {
 
             const answer = {

@@ -18,6 +18,10 @@ export default {
     },
 
     actions: {
+        /**
+         * Returns FAQs from DB
+         * @param {*} param0 
+         */
         getFaqsFromDB({
             commit
         }) {
@@ -45,6 +49,11 @@ export default {
                 });
         },
 
+        /**
+         * Add FAQ to DB
+         * @param {*} param0 
+         * @param {*} faq 
+         */
         addFaq({
             dispatch
         }, faq) {
@@ -72,6 +81,11 @@ export default {
                 })
         },
 
+        /**
+         * Updates DB FAQ
+         * @param {*} param0 
+         * @param {*} payload 
+         */
         updateFaq({
             dispatch
         }, payload) {
@@ -97,6 +111,11 @@ export default {
                 });
         },
 
+        /**
+         * Deletes FAQ by id form DB
+         * @param {*} param0 
+         * @param {String} questionId 
+         */
         deleteFaq({
             dispatch
         }, questionId) {

@@ -1,6 +1,16 @@
 const nodemailer = require('nodemailer');
 const Faqs = require("../data").Faqs;
 
+/**
+ * Add FAQ
+ * @param {String} question 
+ * @param {String} postedBy 
+ * @param {String} postedByEmail 
+ * @param {String} answer 
+ * @param {String} answeredBy 
+ * @param {Date} date 
+ * @param {Boolean} important 
+ */
 const add = async (question, postedBy, postedByEmail, answer, answeredBy, date, important) => {
 
     const faq = new Faqs({
@@ -15,14 +25,29 @@ const add = async (question, postedBy, postedByEmail, answer, answeredBy, date, 
     await faq.save();
 };
 
+/**
+ * Get all FAQs
+ */
 const getAll = async () => {
     return await Faqs.find();
 };
 
+/**
+ * Get FAQ by id
+ * @param {String} id 
+ */
 const getById = async (id) => {
     return await Faqs.findById(id);
 };
 
+/**
+ * Update FAQ by id
+ * @param {String} id 
+ * @param {String} question 
+ * @param {String} answer 
+ * @param {String} answeredBy 
+ * @param {Boolean} important 
+ */
 const updateById = async (id, question, answer, answeredBy, important) => {
     await Faqs.findByIdAndUpdate(id, {
         $set: {
@@ -34,10 +59,18 @@ const updateById = async (id, question, answer, answeredBy, important) => {
     });
 };
 
+/**
+ * Delete FAQ by id
+ * @param {String} id 
+ */
 const deleteById = async (id) => {
     await Faqs.findByIdAndDelete(id);
 };
 
+/**
+ * Send answer by email
+ * @param {*} faq 
+ */
 const sendAnswer = (faq) => {
 
     const user_email = "kayli.mitchell67@ethereal.email";

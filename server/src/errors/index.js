@@ -1,15 +1,14 @@
 class ServerError extends Error {
 
-  constructor(message, httpStatus) {
-    super(message);
-    this.name = this.constructor.name;
-    this.httpStatus = httpStatus;
-    Error.captureStackTrace(this, this.constructor);
-    this.success = false;
-  }
+    constructor(message, httpStatus) {
+        super(message);
+        this.name = this.constructor.name;
+        this.httpStatus = httpStatus;
+        Error.captureStackTrace(this, this.constructor);
+        this.success = false;
+    }
 }
-  
+
 module.exports = {
-  ServerError,
+    ServerError,
 };
-  
